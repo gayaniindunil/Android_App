@@ -70,7 +70,7 @@
 
             <Button
                 android:id="@+id/btnNormMode"
-                android:text="Back"
+                android:text="C"
                 android:layout_marginRight="1pt"
                 android:layout_marginLeft="1pt"
                 android:layout_height="30pt"
