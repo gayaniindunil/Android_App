@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         et1 = findViewById(R.id.editText);
-        configureSciMode();
+        //configureSciMode();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -42,7 +42,9 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this,"Standard Calculator",Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.sci_mode:
-                Toast.makeText(this,"Scientific Calculator",Toast.LENGTH_SHORT).show();
+                Intent intent1 = new Intent(this,SecondActivity.class);
+                startActivity(intent1);
+                Toast.makeText(this,"Switching to Scientific Calculator",Toast.LENGTH_SHORT).show();
                 return true;
             default:return super.onOptionsItemSelected(item);
 

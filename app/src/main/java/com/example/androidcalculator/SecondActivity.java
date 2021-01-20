@@ -3,6 +3,7 @@ package com.example.androidcalculator;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,7 +33,9 @@ public class SecondActivity extends AppCompatActivity {
         switch (item.getItemId()){
 
             case R.id.stand_mode:
-                Toast.makeText(this,"Standard Calculator",Toast.LENGTH_SHORT).show();
+                Intent intent2 = new Intent(SecondActivity.this,MainActivity.class);
+                startActivity(intent2);
+                Toast.makeText(this,"Switched to Standard Calculator",Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.sci_mode:
                 Toast.makeText(this,"Scientific Calculator",Toast.LENGTH_SHORT).show();
