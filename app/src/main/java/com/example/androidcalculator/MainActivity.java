@@ -11,12 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     EditText et1;
     boolean isNewOperation = true;
+    private NativeLib nativeLib;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,13 @@ public class MainActivity extends AppCompatActivity {
 
         et1 = findViewById(R.id.editText);
         //configureSciMode();
+
+        nativeLib = new NativeLib();
+
+        String stringFromJNI = nativeLib.stringFromJNI();
+        TextView tv = findViewById(R.id.editTextOutput);
+        tv.setText(stringFromJNI);
+        callcalculator();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -137,5 +146,37 @@ public class MainActivity extends AppCompatActivity {
 
         }
         et1.setText(number);
+    }
+
+    // call to a native method
+
+
+    public void callcalculator(){
+        Button scimode = findViewById(R.id.btnEqual);
+        scimode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendInputToJNI();
+                //getAnswer();
+            }
+        });
+    }
+
+    public void sendInputToJNI(){
+        TextView inputDatatextid = findViewById(R.id.editText);
+        String s = inputDatatextid.getText().toString();
+
+
+        int x = nativeLib.InputToJNI(s,"sci");
+        inputDatatextid.setText(x);
+    }
+
+    public void getAnswer(){
+        String out = nativeLib.outputFromJNI();
+
+        TextView outtext = findViewById(R.id.editTextOutput);
+        outtext.setText(out);
+
+
     }
 }

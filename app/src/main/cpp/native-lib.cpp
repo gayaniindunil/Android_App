@@ -1,18 +1,17 @@
+#include <alloca.h>
 //
 // Created by GC2176 on 1/20/2021.
 //
-
-#include <alloca.h>
-
 #include <iostream>
 #include <string>
 #include <jni.h>
 
+
 extern "C"
-JNIEXPOT jstring JNICALL
+JNIEXPORT jstring JNICALL
 Java_com_example_androidcalculator_NativeLib_stringFromJNI(JNIEnv *env, jobject thiz) {
-    std::string hello = "Hello from C++";
-    return env->NewStringUTF(hello.c_str());
+std::string hello = "Hello from C++";
+return env->NewStringUTF(hello.c_str());
 }
 
 extern "C"
@@ -39,7 +38,7 @@ Java_com_example_androidcalculator_NativeLib_InputToJNI(JNIEnv *env, jobject thi
 }
 
 extern "C"
-JNI
+JNIEXPORT jstring JNICALL
 Java_com_example_androidcalculator_NativeLib_outputFromJNI(JNIEnv *env, jobject thiz) {
     // TODO: implement outputFromJNI()
     double r = 5.0;
