@@ -46,17 +46,17 @@
                 android:layout_width="30pt"
                 android:layout_weight="1"
                 android:backgroundTint="@color/teal_700"
-                android:onClick="clearEvent"></Button>
+                android:onClick="clearAllEvent"></Button>
 
             <Button
-                android:id="@+id/btnSciMode"
+                android:id="@+id/btnC"
                 android:layout_width="30pt"
                 android:layout_height="30pt"
                 android:layout_marginLeft="1pt"
                 android:layout_marginRight="1pt"
                 android:layout_weight="1"
                 android:backgroundTint="@color/teal_700"
-                android:onClick="numberEvent"
+                android:onClick="clearLastChar"
                 android:text="C"
                 android:textSize="12sp"></Button>
 
@@ -233,7 +233,7 @@
             android:layout_width="30pt"
             android:layout_weight="1"
             android:backgroundTint="@color/teal_700"
-            android:onClick="numberEvent"></Button>
+            android:onClick="operatorEvent"></Button>
 
 
         <Button
@@ -243,7 +243,7 @@
             android:layout_marginRight="1pt"
             android:layout_weight="1"
             android:backgroundTint="@color/teal_700"
-            android:onClick="numberEvent"
+            android:onClick="operatorEvent"
             android:text="."></Button>
 
         <Button

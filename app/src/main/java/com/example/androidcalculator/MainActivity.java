@@ -14,11 +14,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Arrays;
+
 public class MainActivity extends AppCompatActivity {
 
     EditText et1;
-    boolean isNewOperation = true;
+    boolean isNewOperation;
     private NativeLib nativeLib;
+    String calMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,14 +29,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         et1 = findViewById(R.id.editText);
-        //configureSciMode();
-
+        isNewOperation = true;
         nativeLib = new NativeLib();
-
-        String stringFromJNI = nativeLib.stringFromJNI();
-        TextView tv = findViewById(R.id.editTextOutput);
-        tv.setText(stringFromJNI);
-        callcalculator();
+        calMode = "standard";
+//
+//        String stringFromJNI = nativeLib.stringFromJNI();
+//        TextView tv = findViewById(R.id.editTextOutput);
+//        tv.setText(stringFromJNI);
+        calcalculator();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -62,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void configureSciMode() {
-        Button scimode = findViewById(R.id.btnSciMode);
+        Button scimode = findViewById(R.id.btnC);
         scimode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,8 +75,48 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void clearEvent(View view) {
+    //keypad handling
+
+
+    public void clearAllEvent(View view) {
         et1.setText("0");
+        isNewOperation = true;
+    }
+
+    public void clearLastChar(View view){
+        String current_text = et1.getText().toString();
+        if(current_text.length() == 1){
+            et1.setText("0");
+            isNewOperation = true;
+        }
+        else if (!isNewOperation){
+            et1.setText(current_text.replace(current_text.substring(current_text.length() - 1),""));
+        }
+    }
+
+    public boolean keyvalidate(String s,String buttonPressed){
+        String [] operatorList = {"+", "-", "*", "/", ".", "%"};
+        boolean isOperatorvalid;
+
+        //check repeating operators
+        String lastchar = s.substring(s.length() - 1);
+        boolean prevOperator = Arrays.asList(operatorList).contains(lastchar);
+
+        //HANDLE operator first
+        if (isNewOperation == true ){
+            if(buttonPressed.equals("*") || buttonPressed.equals("/") || buttonPressed.equals("%") || buttonPressed.equals(".")){
+                prevOperator = true;
+            }
+        }
+
+        //handle dot operator pressing twice in the same number
+//        if (isOperator && buttonPressed == "."){
+//            int valid = s.matches("(\\d*)(\\+")(\\)";
+//        }
+
+        if(prevOperator==true) isOperatorvalid = false;else isOperatorvalid = true;
+
+        return  isOperatorvalid;
     }
 
     public void numberEvent(View view) {
@@ -81,8 +124,8 @@ public class MainActivity extends AppCompatActivity {
             et1.setText("");
         }
         isNewOperation = false;
-
         String number = et1.getText().toString();
+
         switch (view.getId()){
             case R.id.btn0:
                 number += "0";
@@ -114,46 +157,58 @@ public class MainActivity extends AppCompatActivity {
             case R.id.btn9:
                 number += "9";
                 break;
-            case R.id.btnDot:
-                number += ".";
-                break;
-            case R.id.btnPlusMinus:
-                number = "-" + number;
-                break;
         }
         et1.setText(number);
     }
 
     public void operatorEvent(View view) {
+
         String number = et1.getText().toString();
-        isNewOperation = false;
+        String keyPressed = "";
+
         switch (view.getId()){
             case R.id.btnpercent:
-                number += "%";
+                keyPressed += "%";
                 break;
             case R.id.btnAdd:
-                number += "+";
+                keyPressed += "+";
                 break;
             case R.id.btnSubtract:
-                number += "-";
+                keyPressed += "-";
                 break;
             case R.id.btnMultiply:
-                number += "*";
+                keyPressed += "*";
                 break;
             case R.id.btnDivide:
-                number += "/";
+                keyPressed += "/";
                 break;
-
+            case R.id.btnDot:
+                keyPressed += ".";
+                break;
+//            case R.id.btnPlusMinus:
+//                keyPressed = "-";
+//                break;
         }
-        et1.setText(number);
+        boolean iskeypressvalid = keyvalidate(number,keyPressed);
+
+        if (iskeypressvalid){
+            if (keyPressed == "-"){
+
+            }else {
+                number += keyPressed;
+                et1.setText(number);
+                isNewOperation = false;
+            }
+        }
+
     }
 
-    // call to a native method
 
 
-    public void callcalculator(){
-        Button scimode = findViewById(R.id.btnEqual);
-        scimode.setOnClickListener(new View.OnClickListener() {
+    //calculator functions
+    public void calcalculator(){
+        Button equalbtn = findViewById(R.id.btnEqual);
+        equalbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendInputToJNI();
@@ -163,12 +218,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendInputToJNI(){
-        TextView inputDatatextid = findViewById(R.id.editText);
-        String s = inputDatatextid.getText().toString();
+        String s = et1.getText().toString();
 
 
-        int x = nativeLib.InputToJNI(s,"sci");
-        inputDatatextid.setText(x);
+        int x = nativeLib.InputToJNI(s,calMode);
+        et1.setText(x);
     }
 
     public void getAnswer(){
@@ -176,7 +230,5 @@ public class MainActivity extends AppCompatActivity {
 
         TextView outtext = findViewById(R.id.editTextOutput);
         outtext.setText(out);
-
-
     }
 }
