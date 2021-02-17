@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     boolean isNewOperation;
     private NativeLib nativeLib;
     String calMode;
+    TextView outtext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +30,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         et1 = findViewById(R.id.editText);
+        outtext = findViewById(R.id.editTextOutput);
         isNewOperation = true;
         nativeLib = new NativeLib();
         calMode = "standard";
-//
+
 //        String stringFromJNI = nativeLib.stringFromJNI();
 //        TextView tv = findViewById(R.id.editTextOutput);
 //        tv.setText(stringFromJNI);
-        calcalculator();
+        calculator();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void clearAllEvent(View view) {
         et1.setText("0");
+        outtext.setText("");
         isNewOperation = true;
     }
 
@@ -104,15 +107,17 @@ public class MainActivity extends AppCompatActivity {
 
         //HANDLE operator first
         if (isNewOperation == true ){
-            if(buttonPressed.equals("*") || buttonPressed.equals("/") || buttonPressed.equals("%") || buttonPressed.equals(".")){
+            if(buttonPressed.equals("*") || buttonPressed.equals("/") || buttonPressed.equals("%") ){
                 prevOperator = true;
             }
         }
 
         //handle dot operator pressing twice in the same number
-//        if (isOperator && buttonPressed == "."){
+//        if (isOperator && buttonPressed.equals(".")){
 //            int valid = s.matches("(\\d*)(\\+")(\\)";
 //        }
+
+        //handle
 
         if(prevOperator==true) isOperatorvalid = false;else isOperatorvalid = true;
 
@@ -122,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
     public void numberEvent(View view) {
         if (isNewOperation){
             et1.setText("");
+            outtext.setText("");
         }
         isNewOperation = false;
         String number = et1.getText().toString();
@@ -185,16 +191,22 @@ public class MainActivity extends AppCompatActivity {
             case R.id.btnDot:
                 keyPressed += ".";
                 break;
-//            case R.id.btnPlusMinus:
-//                keyPressed = "-";
-//                break;
+            case R.id.btnPlusMinus:
+                keyPressed = "-/+";
+                break;
         }
         boolean iskeypressvalid = keyvalidate(number,keyPressed);
 
         if (iskeypressvalid){
-            if (keyPressed == "-"){
-
-            }else {
+            if (keyPressed == "-/+"){
+                if (isNewOperation){
+                    number = keyPressed;
+                    et1.setText(number);
+                    isNewOperation = false;
+                }else if (!isNewOperation ){
+                    //add - sign to the begining
+                }
+            }else { //handle if first  + or - or . operator.
                 number += keyPressed;
                 et1.setText(number);
                 isNewOperation = false;
@@ -202,33 +214,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
-
-
     //calculator functions
-    public void calcalculator(){
+    public void calculator(){
         Button equalbtn = findViewById(R.id.btnEqual);
         equalbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendInputToJNI();
-                //getAnswer();
+                getAnswer();
             }
         });
     }
 
-    public void sendInputToJNI(){
-        String s = et1.getText().toString();
-
-
-        int x = nativeLib.InputToJNI(s,calMode);
-        et1.setText(x);
-    }
+//    public boolean sendInputToJNI(){
+////        String s = et1.getText().toString();
+////        boolean x = nativeLib.cppCal(s,calMode);
+////        return x;
+//    }
 
     public void getAnswer(){
-        String out = nativeLib.outputFromJNI();
-
-        TextView outtext = findViewById(R.id.editTextOutput);
+        String s = et1.getText().toString();
+        String out = nativeLib.outputFromJNI(s,calMode);
+        String text = outtext.getText().toString();
         outtext.setText(out);
+        isNewOperation = true;
+
     }
 }

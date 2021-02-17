@@ -8,7 +8,7 @@ public class NativeLib {
 
     public native String stringFromJNI();
 
-    public native int InputToJNI(String input,String mode);
+    public native boolean InputToJNI(String input,String mode);
 
-    public native String outputFromJNI();
+    public native String outputFromJNI(String input,String mode);
 }

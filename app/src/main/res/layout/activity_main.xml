@@ -27,6 +27,7 @@
         android:layout_weight="1"
         android:ems="10"
         android:gravity="right|center"
+        android:textSize="20pt"
         android:inputType="textPersonName"
         android:text=" " />
 

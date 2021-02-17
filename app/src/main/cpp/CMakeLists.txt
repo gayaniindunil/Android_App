@@ -6,7 +6,7 @@
 cmake_minimum_required(VERSION 3.10.2)
 
 # Declares and names the project.
-
+enable_language(CXX)
 project("AndroidCalculator")
 
 # Creates and names a library, sets it as either STATIC
@@ -14,14 +14,19 @@ project("AndroidCalculator")
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
 
-add_library( # Sets the name of the library.
+add_library( # Specifies the name of the library.
         native-lib
 
         # Sets the library as a shared library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        native-lib.cpp )
+        native-lib.cpp
+        Calculator/CalculatorApp.cpp
+        Calculator/Calculator.cpp
+        Calculator/ScientificCalculator.cpp
+        Calculator/Operators.cpp
+        Calculator/StandardCalculator.cpp)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
@@ -46,3 +51,4 @@ target_link_libraries( # Specifies the target library.
         # Links the target library to the log library
         # included in the NDK.
         ${log-lib} )
+
